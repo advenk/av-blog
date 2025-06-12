@@ -1,7 +1,7 @@
 ---
 title: "GSoC Week 1: Project Setup"
 author: "Aditya Venkatesh"
-pubDatetime: 2025-06-12T15:37:07.000Z
+pubDatetime: 2025-06-11T15:37:07.000Z
 slug: gsoc-week-1
 featured: true
 tags: ["GSoC", "DBpedia", "Week 1"]
