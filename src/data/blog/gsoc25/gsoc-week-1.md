@@ -20,13 +20,13 @@ This post is a logbook of my experience: the hurdles, the fixes, and the small w
 
 ## What is the DBpedia Information Extraction Framework (DIEF)?
 
-The DBpedia Information Extraction Framework (DIEF) is the backbone of DBpedia's knowledge extraction pipeline. It parses Wikipedia dumps, applies mapping rules, and outputs structured data (think: subject-predicate-object triples). For the Hindi chapter, getting DIEF to run locally is the first step to meaningful contributions.
+The [DBpedia Information Extraction Framework (DIEF)](https://github.com/dbpedia/extraction-framework) is the backbone of DBpedia's knowledge extraction pipeline. It parses Wikipedia dumps, applies mapping rules, and outputs structured data (subject-predicate-object triples). Compiling and running DIEF to locally for the Hindi configuration was the first step to meaningful contributions.
 
 <!-- ![Placeholder: DIEF Pipeline Diagram](/av-blog/images/dief-arch.png) -->
 
 ## What is the Neural Extraction Framework (NEF)?
 
-The [Neural Extraction Framework (NEF)](https://github.com/dbpedia/neural-extraction-framework) leverages deep learning models for tasks like entity recognition, coreference resolution, and entity linking—pushing DBpedia's extraction capabilities beyond rule-based systems.
+The [Neural Extraction Framework (NEF)](https://github.com/dbpedia/neural-extraction-framework) leverages machine learning models for tasks like entity recognition, coreference resolution, and entity linking—pushing DBpedia's extraction capabilities beyond rule-based systems.
 
 <!-- ![Placeholder: NEF Model Overview](/av-blog/images/nef-overview.png) -->
 
@@ -34,11 +34,11 @@ The [Neural Extraction Framework (NEF)](https://github.com/dbpedia/neural-extrac
 
 ## Weeks 1-2: Setup, Debug, Repeat
 
-### DIEF: Taming the Beast
+### DIEF
 
-My first challenge was getting DIEF up and running. I initially tried running the extraction framework directly, which led me down a rabbit hole of cryptic errors: missing property files, incomplete configurations, and issues with the wiki dump file itself.
+My first challenge was getting DIEF up and running. I initially tried running the extraction framework directly, which led me down a path of cryptic errors: missing property files, incomplete configurations, and issues with the wiki dump file itself.
 
-After a few days of struggle, a lifeline from my mentor: use the [`marvin-config`](https://github.com/dbpedia/marvin-config) repository. This is designed for local deployment and abstracts away much of the pain. It still required some tweaking for the Hindi chapter, including modifying configs, updating paths, and adjusting the download process to use our updated Hindi mappings. You can see all the necessary changes in [this commit](https://github.com/dbpedia/marvin-config/commit/bafb9a4efcf3d6cead757f63498638bc22201cfb).
+After a few days of struggle, a lifeline from my mentor: "use the [`marvin-config`](https://github.com/dbpedia/marvin-config) repository". This is designed for easy deployment and abstracts away much of the manual hurdles. It still required some tweaking for the Hindi chapter, including adding download and extraction configs, updating paths, and adjusting the download process to use our updated Hindi mappings. You can see all the necessary changes in [this commit](https://github.com/dbpedia/marvin-config/commit/bafb9a4efcf3d6cead757f63498638bc22201cfb).
 
 Even with `marvin-config`, there were a couple of roadblocks:
 
@@ -60,14 +60,16 @@ Once the extraction pipeline ran successfully, I needed a way to query the gener
 
 ### NEF: Chasing Model Files
 
-Setting up the Neural Extraction Framework (NEF) was a different kind of beast, more about wrangling dependencies and file paths than legacy code. The process involved:
+Setting up the Neural Extraction Framework (NEF) was a different kind of struggle, more about fixing dependencies and file paths than legacy code. The process involved:
 
 -   **Model Downloads:** The download script in the repo had issues (duplicate `tar` commands, Google Drive links not working with `wget`). I switched to `gdown` for downloads and fixed the extraction commands.
--   **Dependency Hell:** Several Python packages were missing from `requirements.txt`. After some trial and error, I added everything needed for the Streamlit demo and model loading.
--   **File Locations:** The code expected model files in very specific directories. I ended up moving files around and patching the code to look in the right places to match the downloaded structure.
+-   **Dependency Hell:** Several Python packages were missing from `requirements.txt`. After some trial and error, I added everything needed to run all the modules.
+-   **File Locations:** The code expected model files in very specific directories. I patched the code to look in the right places to match the downloaded structure.
 -   **Manual Fixes:** For entity linking, I had to patch the Fairseq model loader to allow non-weights-only checkpoints.
 
 After all this, the NEF demo finally ran—coreference, chunking, and entity linking all working. The feeling? Like finally seeing the output of a long-running `make` command succeed.
+
+You can see the PR for streamlining this repo [here](https://github.com/dbpedia/neural-extraction-framework/pull/19).
 
 <!-- ![Placeholder: NEF Demo Screenshot](/av-blog/images/nef-demo.png) -->
 
