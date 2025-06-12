@@ -13,6 +13,8 @@ export function getPath(
   filePath: string | undefined,
   includeBase = true
 ) {
+  const astroBasePath = import.meta.env.BASE_URL;
+
   const pathSegments = filePath
     ?.replace(BLOG_PATH, "")
     .split("/")
@@ -21,7 +23,7 @@ export function getPath(
     .slice(0, -1) // remove the last segment_ file name_ since it's unnecessary
     .map(segment => slugifyStr(segment)); // slugify each segment path
 
-  const basePath = includeBase ? "/posts" : "";
+  const pageBasePath = includeBase ? "/posts" : "";
 
   // Making sure `id` does not contain the directory
   const blogId = id.split("/");
@@ -29,8 +31,14 @@ export function getPath(
 
   // If not inside the sub-dir, simply return the file path
   if (!pathSegments || pathSegments.length < 1) {
-    return [basePath, slug].join("/");
+    return [astroBasePath, pageBasePath, slug]
+      .filter(path => path)
+      .join("/")
+      .replace(/\/$/, "");
   }
 
-  return [basePath, ...pathSegments, slug].join("/");
+  return [astroBasePath, pageBasePath, ...pathSegments, slug]
+    .filter(path => path)
+    .join("/")
+    .replace(/\/$/, "");
 }
