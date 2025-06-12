@@ -5,19 +5,19 @@
 
 :root,
 html[data-theme="light"] {
-  --background: #fdfdfd;
-  --foreground: #282728;
-  --accent: #006cac;
-  --muted: #e6e6e6;
-  --border: #ece9e9;
+  --background: #f9f9f9; /* Very light gray */
+  --foreground: #333333; /* Dark Gray */
+  --accent: #007bff; /* Classic Blue */
+  --muted: #e9ecef; /* Light Gray */
+  --border: #ced4da; /* Medium Gray */
 }
 
 html[data-theme="dark"] {
-  --background: #212737;
-  --foreground: #eaedf3;
-  --accent: #ff6b01;
-  --muted: #343f60bf;
-  --border: #ab4b08;
+  --background: #222222; /* Dark Gray */
+  --foreground: #f8f9fa; /* Light Gray */
+  --accent: #66b3ff; /* Lighter Blue */
+  --muted: #343a40; /* Darker Gray */
+  --border: #495057; /* Medium Dark Gray */
 }
 
 @theme inline {
@@ -55,7 +55,7 @@ html[data-theme="dark"] {
 }
 
 @utility max-w-app {
-  @apply max-w-3xl;
+  @apply max-w-4xl xl:max-w-5xl;
 }
 
 .active-nav {

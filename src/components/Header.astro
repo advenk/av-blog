@@ -10,16 +10,41 @@ import LinkButton from "./LinkButton.astro";
 import { SITE } from "@/config";
 
 const { pathname } = Astro.url;
+const basePath = import.meta.env.BASE_URL;
 
-// Remove trailing slash from current pathname if exists
+// Remove trailing slash from current pathname if exists for comparison
 const currentPath =
-  pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
+  pathname.endsWith("/") && pathname.length > 1
+    ? pathname.slice(0, -1)
+    : pathname;
 
 const isActive = (path: string) => {
-  const currentPathArray = currentPath.split("/").filter(p => p.trim());
-  const pathArray = path.split("/").filter(p => p.trim());
+  // Construct the full path for the link including the base path
+  // e.g., path='/posts', basePath='/blog/' -> '/blog/posts'
+  const linkPathWithBase = `${basePath.replace(/\/$/, "")}${
+    path === "/" ? "/" : path
+  }`;
 
-  return currentPath === path || currentPathArray[0] === pathArray[0];
+  // Normalize the link path by removing any trailing slash (if it's not the root)
+  const normalizedLinkPath =
+    linkPathWithBase.endsWith("/") && linkPathWithBase.length > 1
+      ? linkPathWithBase.slice(0, -1)
+      : linkPathWithBase;
+
+  // When path is `/`, we should check against the base path.
+  if (path === "/") {
+    const normalizedBasePath =
+      basePath.endsWith("/") && basePath.length > 1
+        ? basePath.slice(0, -1)
+        : basePath;
+    return currentPath === normalizedBasePath;
+  }
+
+  // For other pages, check for an exact match or if it's a parent path
+  return (
+    currentPath === normalizedLinkPath ||
+    currentPath.startsWith(`${normalizedLinkPath}/`)
+  );
 };
 ---
 
@@ -40,7 +65,7 @@ const isActive = (path: string) => {
       class="relative flex w-full items-baseline justify-between bg-background p-4 sm:items-center sm:py-6"
     >
       <a
-        href="/"
+        href={import.meta.env.BASE_URL}
         class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
       >
         {SITE.title}
