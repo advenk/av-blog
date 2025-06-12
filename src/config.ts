@@ -1,5 +1,5 @@
 export const SITE = {
-  website: "https://advenk.github.io/", // replace this with your deployed domain
+  website: "https://advenk.github.io", // replace this with your deployed domain
   author: "Aditya Venkatesh",
   profile: "https://github.com/advenk",
   desc: "My GSoC 2025 journey with DBpedia.",
@@ -14,7 +14,7 @@ export const SITE = {
   editPost: {
     enabled: true,
     text: "Suggest Changes",
-    url: "https://github.com/advenk/adityavenkatesh/edit/main/",
+    url: "https://github.com/advenk/av-blog/edit/main/",
   },
   dynamicOgImage: true,
   lang: "en", // html lang code. Set this empty and default will be "en"
