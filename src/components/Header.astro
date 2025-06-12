@@ -12,12 +12,6 @@ import { SITE } from "@/config";
 const { pathname } = Astro.url;
 const basePath = import.meta.env.BASE_URL;
 
-const getUrl = (path: string) => {
-  // Always start with the base path, ensuring it ends with a slash if it's not empty
-  const B = basePath.replace(/\/$/, "");
-  return `${B}${path}`;
-};
-
 // Remove trailing slash from current pathname if exists for comparison
 const currentPath =
   pathname.endsWith("/") && pathname.length > 1
@@ -100,26 +94,17 @@ const isActive = (path: string) => {
           ]}
         >
           <li class="col-span-2">
-            <a
-              href={getUrl("/posts")}
-              class:list={{ "active-nav": isActive("/posts") }}
-            >
+            <a href="/posts" class:list={{ "active-nav": isActive("/posts") }}>
               Posts
             </a>
           </li>
           <li class="col-span-2">
-            <a
-              href={getUrl("/tags")}
-              class:list={{ "active-nav": isActive("/tags") }}
-            >
+            <a href="/tags" class:list={{ "active-nav": isActive("/tags") }}>
               Tags
             </a>
           </li>
           <li class="col-span-2">
-            <a
-              href={getUrl("/about")}
-              class:list={{ "active-nav": isActive("/about") }}
-            >
+            <a href="/about" class:list={{ "active-nav": isActive("/about") }}>
               About
             </a>
           </li>
@@ -127,7 +112,7 @@ const isActive = (path: string) => {
             SITE.showArchives && (
               <li class="col-span-2">
                 <LinkButton
-                  href={getUrl("/archives")}
+                  href="/archives"
                   class:list={[
                     "focus-outline flex justify-center p-3 sm:p-1",
                     {
@@ -145,7 +130,7 @@ const isActive = (path: string) => {
           }
           <li class="col-span-1 flex items-center justify-center">
             <LinkButton
-              href={getUrl("/search")}
+              href="/search"
               class:list={[
                 "focus-outline flex p-3 sm:p-1",
                 { "[&>svg]:stroke-accent": isActive("/search") },
