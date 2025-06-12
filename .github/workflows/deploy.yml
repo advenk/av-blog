@@ -8,22 +8,30 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Check out repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: "📦 Install pnpm"
+        uses: pnpm/action-setup@v4
         with:
-          node-version: 18
+          version: 10.11.1
 
-      - name: Install dependencies
-        run: npm install
+      - name: "Set up Node.js"
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
 
-      - name: Build project
-        run: npm run build
+      - name: "Install dependencies"
+        run: pnpm install
 
-      - name: Deploy to GitHub Pages
+      - name: "Build project"
+        run: pnpm run build
+
+      - name: "Deploy to GitHub Pages"
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
