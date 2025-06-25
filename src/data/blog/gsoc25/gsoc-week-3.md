@@ -1,7 +1,7 @@
 ---
 title: "GSoC Week 3: Pushing the boundary of LLMs for Hindi Relation Extraction"
 author: "Aditya Venkatesh"
-pubDatetime: 2025-06-21T15:37:07.000Z
+pubDatetime: 2025-06-21T09:42:00.000Z
 slug: gsoc-week-3
 featured: true
 tags: ["GSoC", "Hindi", "LLM", "BenchIE", "Week 3"]
