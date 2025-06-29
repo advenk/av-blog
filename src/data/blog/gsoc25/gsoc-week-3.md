@@ -8,11 +8,11 @@ tags: ["GSoC", "Hindi", "LLM", "BenchIE", "Week 3"]
 description: "Week 3 of GSoC'25: Building, evaluating, and benchmarking LLM-based information extraction for Hindi using the BenchIE dataset. Models, prompts, metrics, and what we learned."
 ---
 
-> "It may be that today's large neural networks are slightly conscious." — Ilya Sutskever
+> It may be that today's large neural networks are slightly conscious. — Ilya Sutskever
 
 ## Introduction
 
-Week 3 of my GSoC'25 journey was all about scaling up: from setup and debugging to running with LLMs on Hindi information extraction. This week, I evaluated the performance of current open source LLMs on Open Information Extraction (OIE) tasks. 
+Week 3 of my GSoC'25 journey was all about scaling up: from setup and debugging to running experiments with LLMs on Hindi information extraction. This week, I evaluated the performance of current open source LLMs on Open Information Extraction (OIE) tasks. 
 We established a framework to test the performance of a LLM through ollama on a full Hindi-BenchIE dataset. We then systematically compared models and prompting strategies, and tried to figure out what works (and what doesn't) for extracting structured knowledge from Hindi text.
 
 This post explains our setup, methodology, and results.
@@ -31,7 +31,7 @@ Our framework is simple. We have 3 main components:
 
 ## The Dataset: Hindi-BenchIE
 
-The evaluation is done on the [Hindi-BenchIE](https://github.com/dbpedia/benchie) dataset—a gold-standard collection of 112 Hindi sentences, each annotated with clusters(possibilities) of subject-predicate-object (SPO) triples. This dataset is challenging: sentences are diverse, often ambiguous, and require nuanced understanding to extract the correct relations.
+The evaluation is done on the [Hindi-BenchIE](https://github.com/ritwikmishra/hindi-benchie) dataset—a gold-standard collection of 112 Hindi sentences, each annotated with clusters(possibilities) of subject-predicate-object (SPO) triples. This dataset is challenging: sentences are diverse, often ambiguous, and require nuanced understanding to extract the correct relations.
 
 Each sentence comes with multiple valid clusters of extractions, reflecting the inherent ambiguity and richness of the language. Our goal: see how close LLMs can get to human-level extraction on this benchmark.
 

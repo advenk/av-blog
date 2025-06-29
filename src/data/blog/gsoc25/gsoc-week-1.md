@@ -8,7 +8,7 @@ tags: ["GSoC", "DBpedia", "Week 1", "Hindi"]
 description: "Weeks 1 & 2 of my GSoC'25 journey: setting up the DBpedia Information Extraction Framework and Neural Extraction Framework for the Hindi chapter, overcoming roadblocks, and first learnings."
 ---
 
-> "The beginning is the most important part of the work." — Plato (and every developer ever, after a fresh `git clone`)
+> The beginning is the most important part of the work. — Plato (and every developer ever, after a fresh `git clone`)
 
 ## Introduction
 
