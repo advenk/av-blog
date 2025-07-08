@@ -1,7 +1,7 @@
 ---
 title: "GSoC Week 4: Enhancing OIE using ReAct prompting + Link Prediction"
 author: "Aditya Venkatesh"
-pubDatetime: 2025-06-28T16:00:00.000Z
+pubDatetime: 2025-06-28T16:14:00.000Z
 slug: gsoc-week-4
 featured: true
 tags: ["GSoC", "Hindi", "LLM", "ReAct", "linkprediction", "analysis", "Week 4"]
