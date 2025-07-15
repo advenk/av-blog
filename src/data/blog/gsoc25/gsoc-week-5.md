@@ -13,13 +13,13 @@ description: "Week 5 of GSoC'25: Implementing and benchmarking link prediction m
 
 ## Introduction
 
-This is the 5th week of my journey with GSoC and enhancing the neural extraction pipeline for Hindi information extraction. Over the past week, I worked on expanding the existing link prediction notebook and finally implementing and benchmarking some link predictions models (namely TransE and ConvE) on our extracted hindi knowledge graph. I also tried out my idea of integrating a small language model like gemma3 into the existing indIE architecture. We come up with some suprising results!
+This is the 5th week of my journey with GSoC and enhancing the neural extraction pipeline for Hindi information extraction. Over the past week, I worked on expanding the existing link prediction notebook and finally implementing and benchmarking some link prediction models (namely TransE and ConvE) on our extracted hindi knowledge graph. I also tried out my idea of integrating a small language model like Gemma 3 into the existing indIE architecture. We come up with some surprising results!
 
 ---
 ## Link Prediction
 
 ### Pruning and Data Preperation
-As discussed in the last week's post, I decided to prune the graph to have a semantically sensical final graph for the models to work with. By eliminating noisy relations and pruning the graph, we not only enhance model output metrics but also efficiency of training and running. 
+As discussed in the last week's post, I decided to prune the graph to have a semantically sensical final graph for the models to work with. By eliminating noisy relations and pruning the graph, we not only enhance model output metrics but also its training and execution efficiency.
 
 ```code
 RELATION_BLACKLIST = [
@@ -70,11 +70,11 @@ I experimented with a few hyper parameter configurations and this was the one wh
 
 
 #### Incorporating MURIL Embeddings
-In essence all knowledge graph completion (KGC) models learn and modify embeddings of the entities to find similaries and new links for our graph. Our idea here is that we push the model to start with the initial embeddings for each of the entities which better represents the entities and captures its nuances based on the context of the language (which is Hindi here.)
+In essence all knowledge graph completion (KGC) models learn and modify embeddings of the entities to find similarities and new links for our graph. Our idea here is that we push the model to start with the initial embeddings for each of the entities which better represent the entities and captures its nuances based on the context of the language (which is Hindi here.)
 
-[Muril embeddings](https://arxiv.org/abs/2103.10730#:~:text=LMs,MuRIL%20in%20handling%20transliterated%20data) are embeddings tailored for low resources languages like Hindi. Trained on data from wikipedia, these serve as a good starting point to see how these embeddings can boost performance. I took the name of all the entities in our graph and ran it through the muril-base-cased tokenizer to get the (1 x 768) dimension vector which captures the nuances of the particular entity. 
+[Muril embeddings](https://arxiv.org/abs/2103.10730#:~:text=LMs,MuRIL%20in%20handling%20transliterated%20data) are embeddings tailored for low resource languages like Hindi. Trained on data from Wikipedia, these serve as a good starting point to see how these embeddings can boost performance. I took the name of all the entities in our graph and ran it through the muril-base-cased tokenizer to get the (1 x 768) dimension vector which captures the nuances of the particular entity. 
 
-One problem here is that each entity encoded with s would be too much for my local system to handle. This is why we perform Principal Component Analysis (PCA) to reduce the dimensions to 200 which would be more efficient for training on our machine. Note: we sacrifice some information, i.e, we accept that the 200 dimension vector might and would lose some information as compared to its 768 dimension counterpart. 
+One problem here is that each entity encoded with a 768-dimensional vector would be too much for my local system to handle. This is why we perform Principal Component Analysis (PCA) to reduce the dimensions to 200 which would be more efficient for training on our machine. Note: we sacrifice some information, i.e, we accept that the 200 dimension vector might and would lose some information as compared to its 768 dimension counterpart. 
 
 Now we can train our model with the initial embeddings that we have derived using the muril based tokenizer:
 
@@ -114,12 +114,12 @@ Putting all four models' "realistic" tail prediction metrics side-by-side for a 
     *   **TransE (MuRIL)** is the **best performing model** across all `Hits@k` metrics, and has the lowest `arithmetic_mean_rank` and highest `inverse_harmonic_mean_rank`. This is a clear win for using MuRIL embeddings with TransE.
     *   **ConvE (MuRIL)** shows a very significant improvement over **ConvE (Default)** across all metrics. For instance, its Hits@10 jumped from 0.0285 to 0.0903. This indicates that MuRIL embeddings provide a much better starting point for ConvE, helping it learn more effectively.
 
-2.  **TransE still outperforming ConvE:** Even with MuRIL initializations, TransE (MuRIL) still slightly outperforms ConvE (MuRIL) on this dataset and hyperparameter set. This is still a bit counter-intuitive given ConvE's theoretical capacity, reinforcing the idea that ConvE is more sensitive to its setup. Playing around with the hyperparams here would be a good bet to extract more performance. 
+2.  **TransE still outperforms ConvE:** Even with MuRIL initializations, TransE (MuRIL) still slightly outperforms ConvE (MuRIL) on this dataset and hyperparameter set. This is still a bit counter-intuitive given ConvE's theoretical capacity, reinforcing the idea that ConvE is more sensitive to its setup. Tuning the hyperparameters here would be a promising approach to extract more performance. 
 
 **Potential areas for refinement:**
 
-*   **Richer Entity Representations:** Instead of just the entity name, we could try to embed a short textual description of the entity (first para from wikipedia) using MuRIL to get a more comprehensive semantic representation. 
-*   **Fine-tuning MuRIL:** In very advanced setups, the MuRIL model itself could be fine-tuned *during* the KGE training process, allowing the text embeddings to adapt further to the knowledge graph structure. we can explore ways to do this with inbuilt pykeen methods. 
+*   **Richer Entity Representations:** Instead of just the entity name, we could try to embed a short textual description of the entity (first paragraph from wikipedia) using MuRIL to get a more comprehensive semantic representation. 
+*   **Fine-tuning MuRIL:** In very advanced setups, the MuRIL model itself could be fine-tuned *during* the KGE training process, allowing the text embeddings to adapt further to the knowledge graph structure. we can explore ways to do this with built-in PyKEEN methods. 
 
 ### 3. What we can try next:
 
@@ -144,15 +144,15 @@ Putting all four models' "realistic" tail prediction metrics side-by-side for a 
 ## Integrating a LM into the indIE architecture
 
 ### Core Idea
-We have seen that [indIE](https://aclanthology.org/2023.findings-ijcnlp.28.pdf) set the state-of-the-art for hindi information extraction back in 2023 with the following metrics on the BenchIE dataset:
+We have seen that [indIE](https://aclanthology.org/2023.findings-ijcnlp.28.pdf) set the state-of-the-art for Hindi information extraction back in 2023 with the following metrics on the BenchIE dataset:
 ```
 Precision   0.49
 Recall      0.53
 F1 Score    0.51
 ```
 
-The idea here is simple. IndIE relies on a 3 stage pipeline to produce its final output:
-Sentence (input) -> Chunking (P1) -> Creating of MDT (P2) -> Hand Written Rules (P3) -> Triplets (Output)
+The idea here is simple. IndIE relies on a three-stage pipeline to produce its final output:
+Sentence (input) -> Chunking (P1) -> Creation of MDT (P2) -> Handwritten Rules (P3) -> Triplets (Output)
 
 Let's look at what each of these phases does at a high level:
 1. **Chunking**: This is the process of breaking down the input sentence into meaningful multi-word units. Each chunk represents:
@@ -165,7 +165,7 @@ For example:
 Sentence: कार्यरूप जगत को देखकर ही शक्तिरूपी माया की सििद्ध होती है .
 Chunks: ['कार्यरूप जगत को', 'देखकर ही', 'शक्तिरूपी माया की', 'सििद्ध होती है', '.']
 
-2. **Merged Dependency Tree**: The MDT shows how chunks relate to each other grammatically, helping identify subjects, objects, and modifiers. For example for the same above sentence, we would derive the follwoing MDT: 
+2. **Merged Dependency Tree**: The MDT shows how chunks relate to each other grammatically, helping identify subjects, objects, and modifiers. For example for the same above sentence, we would derive the following MDT: 
 ```
 Root Phrase: "सििद्ध होती है" (main predicate/action)
 Dependency Relations:
@@ -176,14 +176,14 @@ Dependency Relations:
   - .->0
 ```
 
-3. **Hand Written Rules for Triplet Extraction**: For the final output, indIE uses over a 100 handwritten rules to derive the final output. This is the brittle component that we want to enhance. 
+3. **Handwritten Rules for Triplet Extraction**: For the final output, indIE uses over 100 handwritten rules to derive the final output. This is the brittle component that we want to enhance. 
 
-The idea here is to try replacing the component of hand written rules. Instead of relying on these, we pass the chunks and MDT to a small LM like gemma3. We explain to gemma3 deeply what a dependency tree is and how it works. Once the model is provided with all this information, it should ideally be able to generate better triplets from before. 
+The idea here is to try replacing the component of hand written rules. Instead of relying on these, we pass the chunks and MDT to a small LM like Gemma 3. We explain to Gemma 3 deeply what a dependency tree is and how it works. Once the model is provided with all this information, it should ideally be able to generate better triplets than before. 
 
 
 ### Setup and Results
 I ran 2 experiments: 
-1. Passing the entire MDT and chunks and rely on LLM to perform the entire extraction. The results of such a run are:
+1. Passing the entire MDT and chunks and relying on LLM to perform the entire extraction. The results of such a run are:
 ```
 === FINAL METRICS Gemma 3 - 12b===
 Total TP (True Positives): 145
@@ -196,7 +196,7 @@ F-score 0.3703703703703704
 
 2. After the indIE rule application, we ask gemma to filter. I use and evaluate two different prompts.  
 
-Prompt 1: Less conservative, gemma fitlers more freely.
+Prompt 1: Less conservative, gemma filters more freely.
 ```
 === FINAL METRICS Filtering - After rule application, ask gemma to filter ===
 Total TP (True Positives): 107
@@ -219,20 +219,20 @@ F-score 0.46799999999999997
 ==============================================
 ```
 
-We can see the precision-recall tradeoff at play here, although its minor.
+We can see the precision-recall tradeoff at play here, although it's minor.
 
 
 
 ## Conclusion and Next Steps
 
 ### Link Prediction
-As discussed with the mentors, we see that our Hindi knowledge graph is not mature enough for link prediction models to perform very well. The benchmark we have set with our prototype is a baseline for future implementations. Going forward, we will not work on link prediction, atleast in the near future, but divert focus to other avenues. 
+As discussed with the mentors, we see that our Hindi knowledge graph is not mature enough for link prediction models to perform very well. The benchmark we have set with our prototype is a baseline for future implementations. Going forward, we will not work on link prediction, at least in the near future, but divert focus to other avenues. 
 
 ### Information Extraction
-We see that the filtering of indIE triplets with a LM like gemma can help improve performance. Also using the LM for just enhancement also pushed the recall much higher, though it lags in precision. Our aim is try out a few different things to increase recall while also keeping precision so as to achieve state-of-the-art performance. Over the next couple of weeks this is what I'll be focusing on: 
+We see that the filtering of indIE triples with a LM like gemma can help improve performance. Also using the LM for just enhancement also pushed the recall much higher, though it lags in precision. Our aim is to try out a few different things to increase recall while also keeping precision so as to achieve state-of-the-art performance. Over the next couple of weeks this is what I'll be focusing on: 
 
 1. Improve the prompt for extracting new triplets by incorporating the following suggestions:
-- Directly mention its a dependency tree and pass it as triples as given below:
+- Directly mention it's a dependency tree and pass it as triples as given below:
 ```
 Sentence: "Barack Obama was born in Hawaii."
 Dependency Tree:
