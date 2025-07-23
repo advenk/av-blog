@@ -1,7 +1,7 @@
 ---
 title: "GSoC Week 7: Synthetic Data Generation and Performance Testing of Hindi Chapter"
 author: "Aditya Venkatesh"
-pubDatetime: 2025-07-23T09:46:29.000Z
+pubDatetime: 2025-07-23T05:46:29.000Z
 slug: gsoc-week-7
 featured: true
 tags: ["GSoC", "syntheticdatagen", "deployment", "sparql", "Week 7"]
