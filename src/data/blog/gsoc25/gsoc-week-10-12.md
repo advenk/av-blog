@@ -5,7 +5,7 @@ pubDatetime: 2025-08-28T05:00:00.000Z
 slug: gsoc-week-10-12
 featured: true
 tags: ["GSoC", "entitylinking", "evaluation", "dataprep", "Week 10-12"]
-description: "Weeks 10–11 of GSoC'25: implementing predicate linking for Hindi DBpedia, curating synthetic data with LLM-as-a-judge, debugging EL, and final documentation."
+description: "Weeks 10–12 of GSoC'25: implementing predicate linking for Hindi DBpedia, curating synthetic data with LLM-as-a-judge, debugging EL, and final documentation."
 ---
 
 > Growth is a series of small, correct edits—one link, one script, one eval at a time.
